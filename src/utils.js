@@ -4,8 +4,10 @@ const compose = (...fns) =>
 
 const mapObject = (obj, fn) =>
   Object.keys(obj || {})
-    .map(key => ({ key, value: fn(obj[key], key)}))
-    .reduce((acc, {key, value}) => { acc[key] = value; return acc; }, {});
+    .reduce((acc, key) => {
+      acc[key] = fn(obj[key], key);
+      return acc;
+    }, {});
 
 const values = obj => Object.keys(obj || {}).map(x => obj[x]);
 
@@ -38,12 +40,32 @@ const incidencesOfStrings = strings =>
 
 const uniqueStrings = compose(incidencesOfStrings, Object.keys);
 
+const merge = (...objs) =>
+  objs.reduce((acc, obj) => {
+    Object.keys(obj).forEach(key => { acc[key] = obj[key]; });
+    return acc;
+  }, {});
+
+const intersection = (...arrs) =>
+  (arrs || []).reduce((acc, arr) => (acc || []).filter(x => (arr || []).indexOf(x) !== -1));
+
+const filterObject = (obj, fn) =>
+  Object.keys(obj || {})
+    .reduce((acc, {key, value}) => {
+      if (fn(value, key)) acc[key] = value;
+
+      return acc;
+    }, {});
+
 export {
   compose,
   mapObject,
   values,
   uniqueStrings,
   incidencesOfStrings,
-  foldObject
+  foldObject,
+  intersection,
+  filterObject,
+  merge
 };
 
