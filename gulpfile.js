@@ -10,7 +10,7 @@ gulp.task('test', () =>
 );
 
 gulp.task('build', () =>
-    gulp.src('src/index.js')
+    gulp.src('src/**/*.js')
         .pipe(babel({
             presets: ['es2015']
         }))
