@@ -57,6 +57,14 @@ const filterObject = (obj, fn) =>
       return acc;
     }, {});
 
+const base64 = str => {
+  if (typeof str !== "string") throw new Error("Cannot base 64 encode a non-string");
+  return new Buffer(str).toString("base64");
+};
+
+const flatMap = (arr, fn) =>
+  (arr || []).reduce((acc, x) => acc.concat(fn(x)), []);
+
 export {
   compose,
   mapObject,
@@ -66,6 +74,8 @@ export {
   foldObject,
   intersection,
   filterObject,
-  merge
+  merge,
+  base64,
+  flatMap
 };
 

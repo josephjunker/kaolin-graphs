@@ -41,3 +41,5 @@ lib
 
 # Manual debugging sessions
 .repl
+
+.DS_Store
