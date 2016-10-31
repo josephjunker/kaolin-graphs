@@ -65,6 +65,60 @@ const base64 = str => {
 const flatMap = (arr, fn) =>
   (arr || []).reduce((acc, x) => acc.concat(fn(x)), []);
 
+const zipWith = (x, y, fn) => {
+  const result = [];
+
+  for(let i = 0; i < x.length && i < y.length; i++) {
+    result.push(fn(x[i], y[i]));
+  }
+
+  return result;
+};
+
+const deepEqual = (x, y) => {
+  if (Array.isArray(x))
+    return Array.isArray(y) &&
+      x.length === y.length &&
+      zipWith(x, y, deepEqual)
+        .reduce((a, b) => a && b, true);
+
+  if (typeof x !== 'object') return isNaN(x) ? isNaN(y) : x === y;
+  if (typeof y !== 'object') return false;
+
+  if (!x) return x === y;
+
+  return deepEqual(Object.keys(x), Object.keys(y)) &&
+    Object.keys(x)
+      .reduce(
+        (equal, key) => equal && deepEqual(x[key], y[key]),
+        true);
+};
+
+const iterateUntilStable = (x, fn) => {
+  const y = fn(x);
+  return deepEqual(x, y) ? y : iterateUntilStable(y, fn);
+};
+
+const clone = obj => obj && typeof obj === 'object' ?
+  mapObject(obj, x => x) :
+  obj;
+
+const updateForKey = (obj, key, fn) => {
+  const newObj = clone(obj) || {};
+
+  newObj[key] = fn(obj[key]);
+
+  return newObj;
+};
+
+const union = (...arrays) => arrays.reduce((arr1, arr2) => {
+  (arr2 || []).forEach(x => {
+    if (arr1.indexOf(x) === -1) arr1.push(x);
+  });
+
+  return arr1;
+}, []);
+
 export {
   compose,
   mapObject,
@@ -76,6 +130,10 @@ export {
   filterObject,
   merge,
   base64,
-  flatMap
+  flatMap,
+  deepEqual,
+  iterateUntilStable,
+  updateForKey,
+  union
 };
 
