@@ -1,28 +1,43 @@
 
-import {merge, mapObject, union, deepEqual, iterateUntilStable, updateForKey} from "./utils";
+import {
+  merge,
+  mapObject,
+  union,
+  deepEqual,
+  iterateUntilStable,
+  updateForKey,
+  compose
+} from "./utils";
 
 const addAncestors = (graph, rootNodes) => {
 
-  const withInitialAncestors = mapObject(
+  const initial = mapObject(
     graph,
     node =>
-      updateForKey(node, 'ancestors', () => {
-        return rootNodes.indexOf(node.name) !== -1 ?
+      merge(node, {
+        ancestors: rootNodes.indexOf(node.name) !== -1 ?
           [] :
-          node.parents;
+          node.parents,
+        distanceToRoot: rootNodes.indexOf(node.name) !== -1 ?
+          0 :
+          Infinity
       }));
 
   return iterateUntilStable(
-    withInitialAncestors,
+    initial,
     graph => mapObject(
       graph,
       node =>
         rootNodes.indexOf(node.name) !== -1 ?
           node :
-          updateForKey(node, 'ancestors', oldAncestors =>
-            union(oldAncestors,
-                  ...oldAncestors.map(ancestorName => graph[ancestorName].ancestors))
-              .sort()))); // Stabilize to be sure that we'll converge
+          merge(node, {
+            ancestors: union(
+              node.ancestors, ...node.ancestors.map(ancestorName => graph[ancestorName].ancestors))
+              .sort(), // Stabilize to be sure that we'll converge
+            distanceToRoot: node.parents
+              .map(parentName => graph[parentName].distanceToRoot + 1)
+              .reduce((x, y) => x < y ? x : y, node.distanceToRoot)
+          })));
 };
 
 const partiallyOrder = (graph, rootNodes) => {
