@@ -6,19 +6,22 @@ import {
   deepEqual,
   iterateUntilStable,
   updateForKey,
-  compose
+  compose,
+  contains,
+  groupBy,
+  values
 } from "./utils";
 
-const addAncestors = (graph, rootNodes) => {
+const addAncestorInfo = (graph, rootNodes) => {
 
   const initial = mapObject(
     graph,
     node =>
       merge(node, {
-        ancestors: rootNodes.indexOf(node.name) !== -1 ?
+        ancestors: contains(rootNodes, node.name) ?
           [] :
           node.parents,
-        distanceToRoot: rootNodes.indexOf(node.name) !== -1 ?
+        distanceToRoot: contains(rootNodes, node.name) ?
           0 :
           Infinity
       }));
@@ -28,7 +31,7 @@ const addAncestors = (graph, rootNodes) => {
     graph => mapObject(
       graph,
       node =>
-        rootNodes.indexOf(node.name) !== -1 ?
+        contains(rootNodes, node.name) ?
           node :
           merge(node, {
             ancestors: union(
@@ -40,11 +43,53 @@ const addAncestors = (graph, rootNodes) => {
           })));
 };
 
-const partiallyOrder = (graph, rootNodes) => {
-  const withAncestors = addAncestors(graph, rootNodes);
-  return withAncestors;
+
+const addRanks = graph => {
+  const initial = mapObject(graph, node => merge(node, { rank: 0 }));
+
+  const sameRankFartherFromRoot = graph => {
+    const nodes = values(graph);
+    return nodes.filter(
+      node =>
+        nodes.find(
+          otherNode =>
+            node.rank <= otherNode.rank &&
+            otherNode.distanceToRoot < node.distanceToRoot));
+  };
+
+  const increaseRanksOfNodes = (graph, badNodes) =>
+    badNodes.reduce(
+      (graph, badNode) => updateForKey(
+        graph,
+        badNode.name,
+        node => updateForKey(
+          node,
+          'rank',
+          rank => rank + 1)),
+      graph);
+
+  return iterateUntilStable(
+    initial,
+    graph => {
+      return increaseRanksOfNodes(
+        graph,
+        sameRankFartherFromRoot(graph));});
 };
 
+const order = (graph, rootNodes) => {
+  const withAncestors = addAncestorInfo(graph, rootNodes);
 
-export default partiallyOrder;
+  return groupBy(values(addRanks(withAncestors)), ({rank}) => rank)
+    .map(group => group.sort((x, y) => {
+      const yPrecedesX = contains(x.ancestors, y.name),
+            xPrecedesY = contains(y.ancestors, x.name);
+
+      if (yPrecedesX && !xPrecedesY) return -1;
+      if (xPrecedesY && !yPrecedesX) return 1;
+      return x.name.localeCompare(y.name);
+    }))
+    .sort((x, y) => x[0].rank > y[0].rank);
+};
+
+export default order;
 

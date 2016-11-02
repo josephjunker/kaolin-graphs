@@ -119,6 +119,28 @@ const union = (...arrays) => arrays.reduce((arr1, arr2) => {
   return arr1;
 }, []);
 
+const contains = (arr, x) => arr && arr.indexOf(x) !== -1;
+
+const groupBy = (arr, fn) => arr.reduce(
+  (groups, item) => {
+    const label = fn(item),
+          group = groups.find(group => deepEqual(label, group.label));
+
+    if (group) {
+      group.items.push(item);
+    } else {
+      groups.push({
+        label,
+        items: [item]
+      });
+    }
+
+    return groups;
+  }, []).map(group => group.items);
+
+const flatten = arrs => (arrs || []).reduce(
+  (arr1, arr2) => (arr1 || []).concat(arr2 || []));
+
 export {
   compose,
   mapObject,
@@ -134,6 +156,9 @@ export {
   deepEqual,
   iterateUntilStable,
   updateForKey,
-  union
+  union,
+  contains,
+  groupBy,
+  flatten
 };
 
