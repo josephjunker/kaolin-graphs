@@ -1,5 +1,5 @@
 {
-  "name": "schema-combinator-graphs",
+  "name": "kaolin-graphs",
   "version": "0.1.0",
   "description": "Produce a dependency graph representation from schema declarations",
   "main": "./lib/index.js",
