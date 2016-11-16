@@ -51,8 +51,8 @@ const intersection = (...arrs) =>
 
 const filterObject = (obj, fn) =>
   Object.keys(obj || {})
-    .reduce((acc, {key, value}) => {
-      if (fn(value, key)) acc[key] = value;
+    .reduce((acc, key) => {
+      if (fn(obj[key], key)) acc[key] = obj[key];
 
       return acc;
     }, {});

@@ -1,11 +1,11 @@
 var ex = require("./lib/example-inputs").default;
 
-var dotFormatForScope = require("./lib").dotFormatForScope;
+var dotFormatForNeighborhood = require("./lib").dotFormatForNeighborhood;
 
 var exec = require("child_process").exec;
 var writeFileSync = require("fs").writeFileSync;
 
-var graphDescription = dotFormatForScope(ex, { ranked: true, rootNodes: ["AST"] });
+var graphDescription = dotFormatForNeighborhood(ex, "Expression", {});
 
 writeFileSync("foo.dot", graphDescription);
 

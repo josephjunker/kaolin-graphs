@@ -2,6 +2,7 @@
 import makeGraph from "./make-graph";
 import selectNeighborhood from "./select-neighborhood";
 import graphToDotFormat from "./graph-to-dot-format";
+import partiallyOrder from "./partial-ordering";
 
 import {flatten, compose} from "./utils";
 
