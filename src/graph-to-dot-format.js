@@ -1,20 +1,35 @@
 
-import {base64, flatMap, flatten} from "./utils";
+import {flatMap, flatten, contains, values} from "./utils";
 import partialOrdering from "./partial-ordering";
 
-const charsOnly = str => base64(str).replace(/=/g, "");
+const makeAliases = graph =>
+  Object.keys(graph).reduce((aliases, key) => {
+    const transformed = "type_" + key.replace(/[^a-zA-Z0-9]/g, "");
 
-const generateNodes = (graph, stylingInfo) =>
+    if (!contains(values(aliases), transformed)) {
+      aliases[key] = transformed;
+      return aliases;
+    }
+
+    let suffix = 2;
+
+    while (contains(values(aliases), transformed + suffix)) { suffix++; }
+
+    aliases[key] = transformed + suffix;
+    return aliases;
+  }, {});
+
+const generateNodes = (graph, stylingInfo, aliases) =>
   Object.keys(graph)
-    .map(typeName => `${charsOnly(typeName)} [shape = box label = "${typeName}"];`);
+    .map(typeName => `${aliases[typeName]} [shape = box label = "${typeName}"];`);
 
-const generateConnections = (types, stylingInfo) =>
+const generateConnections = (types, stylingInfo, aliases) =>
   flatMap(
     types,
-    type => type.children.map(childName => `${charsOnly(type.name)} -> ${charsOnly(childName)};`))
+    type => type.children.map(childName => `${aliases[type.name]} -> ${aliases[childName]};`))
     .join("\n");
 
-const generateRanks = (ranks, stylingInfo) => {
+const generateRanks = (ranks, stylingInfo, aliases) => {
   if (!stylingInfo.rootNodes)
     throw new Error("Cannot generate a ranked graph without specifying root nodes");
 
@@ -25,21 +40,22 @@ const generateRanks = (ranks, stylingInfo) => {
        'sink' :
        'same');
 
-    return `{ rank = ${rankType}; ${types.map(type => charsOnly(type.name))}; }`;
+    return `{ rank = ${rankType}; ${types.map(type => aliases[type.name])}; }`;
   }).join("\n");
 };
 
 const generateDigraph = (graph, stylingInfo = {}) => {
 
   const ranked = partialOrdering(graph, stylingInfo.rootNodes || []),
-        ordered = flatten(ranked);
+        ordered = flatten(ranked),
+        aliases = makeAliases(graph);
 
   return `digraph G {
-    ${generateNodes(graph, stylingInfo).join("\n")}
+    ${generateNodes(graph, stylingInfo, aliases).join("\n")}
 
-    ${stylingInfo.ranked ? generateRanks(ranked, stylingInfo) : ""}
+    ${stylingInfo.ranked ? generateRanks(ranked, stylingInfo, aliases) : ""}
 
-    ${generateConnections(ordered, stylingInfo)}
+    ${generateConnections(ordered, stylingInfo, aliases)}
   }`;
 };
 
