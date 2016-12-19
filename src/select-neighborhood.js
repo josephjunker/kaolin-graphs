@@ -2,7 +2,7 @@
 import {contains, filterObject, mapObject } from "./utils";
 
 export default (graph, focus) => {
-  console.dir(graph);
+
   const neighborhood = filterObject(graph, (node, name) =>
                                     name === focus ||
                                     contains(node.children, focus) ||

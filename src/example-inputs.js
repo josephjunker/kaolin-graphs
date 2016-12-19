@@ -1,5 +1,5 @@
 
-import {createScope, core as c} from "schema-combinators";
+import {createScope, core as c} from "kaolin";
 
 const scope = createScope();
 

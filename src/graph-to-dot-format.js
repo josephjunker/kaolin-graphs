@@ -19,9 +19,10 @@ const makeAliases = graph =>
     return aliases;
   }, {});
 
-const generateNodes = (graph, stylingInfo, aliases) =>
+const generateNodes = (graph, stylingInfo, aliases, specialNodes) =>
   Object.keys(graph)
-    .map(typeName => `${aliases[typeName]} [shape = box label = "${typeName}"];`);
+    .map(typeName =>
+         `${aliases[typeName]} ` + (specialNodes[typeName] || `[shape = box label = "${typeName}"];`));
 
 const generateConnections = (types, stylingInfo, aliases) =>
   flatMap(
@@ -44,14 +45,14 @@ const generateRanks = (ranks, stylingInfo, aliases) => {
   }).join("\n");
 };
 
-const generateDigraph = (graph, stylingInfo = {}) => {
+const generateDigraph = (graph, stylingInfo = {}, specialNodes = {}) => {
 
   const ranked = partialOrdering(graph, stylingInfo.rootNodes || []),
         ordered = flatten(ranked),
         aliases = makeAliases(graph);
 
   return `digraph G {
-    ${generateNodes(graph, stylingInfo, aliases).join("\n")}
+    ${generateNodes(graph, stylingInfo, aliases, specialNodes).join("\n")}
 
     ${stylingInfo.ranked ? generateRanks(ranked, stylingInfo, aliases) : ""}
 

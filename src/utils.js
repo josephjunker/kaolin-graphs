@@ -47,7 +47,7 @@ const merge = (...objs) =>
   }, {});
 
 const intersection = (...arrs) =>
-  (arrs || []).reduce((acc, arr) => (acc || []).filter(x => (arr || []).indexOf(x) !== -1));
+  (arrs || []).reduce((acc, arr) => acc.filter(x => (arr || []).indexOf(x) !== -1), []);
 
 const filterObject = (obj, fn) =>
   Object.keys(obj || {})
@@ -134,7 +134,13 @@ const groupBy = (arr, fn) => arr.reduce(
   }, []).map(group => group.items);
 
 const flatten = arrs => (arrs || []).reduce(
-  (arr1, arr2) => (arr1 || []).concat(arr2 || []));
+  (arr1, arr2) => (arr1 || []).concat(arr2 || []), []);
+
+const assert = (validationFn, errorFn) =>
+  x => {
+    if (!validationFn(x)) throw new Error(errorFn(x));
+    return x;
+  };
 
 export {
   compose,
@@ -153,6 +159,7 @@ export {
   union,
   contains,
   groupBy,
-  flatten
+  flatten,
+  assert
 };
 

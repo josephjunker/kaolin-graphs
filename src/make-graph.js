@@ -15,16 +15,22 @@ const collectReferences = type => foldObject(['meta'], [], type, (acc, node) => 
   return acc;
 });
 
-const makeGraph = types => mapObject(types, (type, name) => {
-  const children = collectReferences(type),
-        childCounts = incidencesOfStrings(children);
+const makeGraph = scope => {
+  const types = scope.getTypes(),
+        metadata = scope.getMetadata();
 
-  return {
-    name,
-    children: uniqueStrings(children),
-    childCounts
-  };
-});
+  return mapObject(types, (type, name) => {
+    const children = collectReferences(type),
+          childCounts = incidencesOfStrings(children);
+
+    return {
+      name,
+      children: uniqueStrings(children),
+      childCounts,
+      docString: metadata[name].docString
+    };
+  });
+};
 
 const addParents = graph => mapObject(graph, node => {
   const parents = Object.keys(graph)
@@ -54,5 +60,5 @@ export default scope => compose(
     makeGraph,
     addParents,
     addSiblings
-  )(scope.getTypes());
+  )(scope);
 

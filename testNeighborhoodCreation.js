@@ -5,7 +5,7 @@ var dotFormatForNeighborhood = require("./lib").dotFormatForNeighborhood;
 var exec = require("child_process").exec;
 var writeFileSync = require("fs").writeFileSync;
 
-var graphDescription = dotFormatForNeighborhood(ex, "Expression", {});
+var graphDescription = dotFormatForNeighborhood(ex, "Expression", { expandStructs: true });
 
 writeFileSync("foo.dot", graphDescription);
 
