@@ -22,7 +22,7 @@ const makeAliases = graph =>
 const generateNodes = (graph, stylingInfo, aliases, specialNodes) =>
   Object.keys(graph)
     .map(typeName =>
-         `${aliases[typeName]} ` + (specialNodes[typeName] || `[shape = box label = "${typeName}"];`));
+         `${aliases[typeName]} ` + (specialNodes[typeName] || `[shape = box label = "${typeName}" fontsize = 18 fontname = "Times-Bold"];`));
 
 const generateConnections = (types, stylingInfo, aliases) =>
   flatMap(

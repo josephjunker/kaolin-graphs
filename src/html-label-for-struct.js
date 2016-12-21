@@ -67,14 +67,13 @@ const tableToHTML = tableDescriptor => {
 
 const makeTitleRow = typeName => ({
   contents: [{
-    contents: `<B>${typeName}</B>`,
+    contents: `<FONT POINT-SIZE="18"><B>${typeName}</B></FONT>`,
     style: {
-      cellSpacing: 0,
-      align: "CENTER"
     }
   }],
   style: {
     align: "CENTER",
+    bAlign: "CENTER",
     port: "title",
     cellSpacing: 0
   }
@@ -86,12 +85,6 @@ const makeFieldRow = (fieldName, fieldValue) => ({
       contents: `<B>${fieldName}</B>`,
       style: {
         align: "LEFT"
-      }
-    },
-    {
-      contents: fieldValue ? ":" : "",
-      style: {
-        align: "CENTER"
       }
     },
     {
