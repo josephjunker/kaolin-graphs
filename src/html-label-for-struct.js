@@ -69,6 +69,7 @@ const makeTitleRow = typeName => ({
   contents: [{
     contents: `<FONT POINT-SIZE="18"><B>${typeName}</B></FONT>`,
     style: {
+      colSpan: 2
     }
   }],
   style: {
