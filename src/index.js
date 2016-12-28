@@ -10,10 +10,8 @@ import {flatten, compose} from "./utils";
 const dotFormatForScope = (scope, stylingOptions) =>
   graphToDotFormat(makeGraph(scope), stylingOptions);
 
-const orderTypes = compose(
-  makeGraph,
-  partiallyOrder,
-  flatten);
+const orderTypes = (scope, rootNodes) =>
+  flatten(partiallyOrder(makeGraph(scope), rootNodes));
 
 const dotFormatForNeighborhood = (scope, focus, stylingOptions) => {
   const specialNodes = stylingOptions.expandStructs ? makeStructLabels(scope) : {};

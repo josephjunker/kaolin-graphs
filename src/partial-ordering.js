@@ -84,8 +84,8 @@ const order = (graph, rootNodes) => {
       const yPrecedesX = contains(x.ancestors, y.name),
             xPrecedesY = contains(y.ancestors, x.name);
 
-      if (yPrecedesX && !xPrecedesY) return -1;
-      if (xPrecedesY && !yPrecedesX) return 1;
+      if (yPrecedesX && !xPrecedesY) return 1;
+      if (xPrecedesY && !yPrecedesX) return -1;
       return x.name.localeCompare(y.name);
     }))
     .sort((x, y) => x[0].rank > y[0].rank);

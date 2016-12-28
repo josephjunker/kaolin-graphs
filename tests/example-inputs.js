@@ -1,5 +1,5 @@
 
-import {createScope, core as c} from "kaolin";
+const {createScope, core: c} = require("kaolin");
 
 const scope = createScope();
 
@@ -116,5 +116,5 @@ const node = scope.newType("Node", c.alternatives(block, statement));
 
 scope.newType("AST", node);
 
-export default scope;
+module.exports = scope;
 
