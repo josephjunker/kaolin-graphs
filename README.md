@@ -82,8 +82,25 @@ laxStruct({
 Specifying `expandStructs` as `true` will cause structs to be shown in a detailed view, with information on each of their fields. `rootNodes` and `ranked` have the same behavior as in [dotFormatForScope](#dotFormatForScopescope-options).
 
 ### orderTypes(scope, rootNodes)
-Produces a data structure containing the types in `scope` in a hopefully reasonable order, which tries to place types behind the types which depend on them, and ahead of the types which they depend on, with `rootNodes` listed first.
-
+Produces a data structure containing the types in `scope` in a hopefully reasonable order, which orders types by the number of hops they are from the root nodes, and secondarily places types before the types which depend on them.
+* scope: a Kaolin scope object
+* rootNodes: an array of type names
+`orderTypes` returns an array of nodes which each have this schema:
+```es6
+strictStruct({
+  name: string(),
+  children: array(string()),
+  childCounts: dictionary(string(), number()),
+  docString: optional(string()),
+  parents: array(string()),
+  parentCounts: dictionary(string(), number()),
+  siblings: array(string()),
+  siblingCounts: dictionary(string(), number()),
+  ancestors: array(string()),
+  distanceToRoot: number(),
+  rank: number()
+})
+```
 
 ## LICENSE
 MIT
