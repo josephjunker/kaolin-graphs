@@ -14,7 +14,7 @@ const orderTypes = (scope, rootNodes) =>
   flatten(partiallyOrder(makeGraph(scope), rootNodes));
 
 const dotFormatForNeighborhood = (scope, focus, stylingOptions) => {
-  const specialNodes = stylingOptions.expandStructs ? makeStructLabels(scope) : {};
+  const specialNodes = stylingOptions && stylingOptions.expandStructs ? makeStructLabels(scope) : {};
   return graphToDotFormat(selectNeighborhood(makeGraph(scope), focus), stylingOptions, specialNodes);
 };
 

@@ -1,7 +1,7 @@
 
 const orderedTypeScope = require("../lib/ordered-types-schema").default,
       {compileValidators} = require("kaolin"),
-      scope = require("./example-inputs"),
+      scope = require("../example-inputs/ast"),
       {orderTypes} = require("../lib");
 
 const indexByName = nodes => nodes.reduce((acc, node) => {
