@@ -26,26 +26,26 @@ cat graph.dot | dot -Tpng -Grankdir=BT > output.png
 ```
 For the scope given in the example directory, (a schema for the AST of a
 simple imaginary language) we produce this image:
-![unordered graph][https://raw.githubusercontent.com/JosephJNK/kaolin-graphs/master/example-images/whole-scope-unordered.png]
+![unordered graph](https://raw.githubusercontent.com/JosephJNK/kaolin-graphs/master/example-images/whole-scope-unordered.png)
 
 We can produce a graph that partially orders its nodes, by raising types above their dependencies. To customize the graph in this way we can pass an options object to `dotFormatForScope`:
 ```es6
 dotFormatForScope(scope, { ranked: true, rootNodes: ["AST"] });
 ```
 Producing a more structured graph:
-![ordered graph][https://raw.githubusercontent.com/JosephJNK/kaolin-graphs/master/example-images/whole-scope-ordered.png]
+![ordered graph](https://raw.githubusercontent.com/JosephJNK/kaolin-graphs/master/example-images/whole-scope-ordered.png)
 
 We can zoom into the "neighborhood" of a type, that is, the types which it depends on and the types which depend on it, by using the `dotFormatForNeighborhood` function:
 ```es6
 const graphDescription = kaolinGraphs.dotFormatForNeighborhood(ex, "Expression");
 ```
-![basic neighborhood][https://raw.githubusercontent.com/JosephJNK/kaolin-graphs/master/example-images/expression-neighborhood-simple.png]
+![basic neighborhood](https://raw.githubusercontent.com/JosephJNK/kaolin-graphs/master/example-images/expression-neighborhood-simple.png)
 And when focused like this, we can expand the depiction of `strictStruct` and `laxStruct` types to show their structure:
 
 ```es6
 dotFormatForNeighborhood(ex, "Expression", { expandStructs: true });
 ```
-![detailed neighborhood][https://raw.githubusercontent.com/JosephJNK/kaolin-graphs/master/example-images/expression-neighborhood-detailed.png]
+![detailed neighborhood](https://raw.githubusercontent.com/JosephJNK/kaolin-graphs/master/example-images/expression-neighborhood-detailed.png)
 
 ## Rendering with Graphviz
 To produce images, you need to have [Graphvis](http://www.graphviz.org) installed, providing the command line utility `dot`. The simplest way to render an image is to output the string produced by this library to a file, say `temp.txt`, and then pipe this file's contents into `dot`, as in `cat temp.txt | dot -Tpng -Grankdir=BT > image.png`. The `-Tpng` option is to select `.png` as the file's output type; if you wish to output another filetype, do so following graphvis's documentation. `-Grankdir=BT` is to cause the graph to output correctly when the `{ ranked: true }` option is used. If this command line argument is omitted, then the root nodes will appear at the bottom of the image rather than at the top.
