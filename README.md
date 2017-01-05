@@ -39,13 +39,13 @@ We can zoom into the "neighborhood" of a type, that is, the types which it depen
 ```es6
 const graphDescription = kaolinGraphs.dotFormatForNeighborhood(ex, "Expression");
 ```
-![basic neighborhood](https://raw.githubusercontent.com/JosephJNK/kaolin-graphs/master/example-images/expression-neighborhood-simple.png)
+![basic neighborhood](https://raw.githubusercontent.com/JosephJNK/kaolin-graphs/master/example-images/Expression-neighborhood-simple.png)
 And when focused like this, we can expand the depiction of `strictStruct` and `laxStruct` types to show their structure:
 
 ```es6
 dotFormatForNeighborhood(ex, "Expression", { expandStructs: true });
 ```
-![detailed neighborhood](https://raw.githubusercontent.com/JosephJNK/kaolin-graphs/master/example-images/expression-neighborhood-detailed.png)
+![detailed neighborhood](https://raw.githubusercontent.com/JosephJNK/kaolin-graphs/master/example-images/Expression-neighborhood-detailed.png)
 
 ## Rendering with Graphviz
 To produce images, you need to have [Graphvis](http://www.graphviz.org) installed, providing the command line utility `dot`. The simplest way to render an image is to output the string produced by this library to a file, say `temp.txt`, and then pipe this file's contents into `dot`, as in `cat temp.txt | dot -Tpng -Grankdir=BT > image.png`. The `-Tpng` option is to select `.png` as the file's output type; if you wish to output another filetype, do so following graphvis's documentation. `-Grankdir=BT` is to cause the graph to output correctly when the `{ ranked: true }` option is used. If this command line argument is omitted, then the root nodes will appear at the bottom of the image rather than at the top.
