@@ -1,6 +1,6 @@
 {
   "name": "kaolin-graphs",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Produce a dependency graph representation from schema declarations",
   "main": "./lib/index.js",
   "devDependencies": {
@@ -14,7 +14,12 @@
     "kaolin": "^1.0.1"
   },
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp test",
+    "prepublish": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JosephJNK/kaolin-graphs"
   },
   "author": "Joseph Junker",
   "license": "MIT"
